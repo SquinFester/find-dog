@@ -1,5 +1,4 @@
 import DogsList from "@/components/DogsList";
-import getDogsList from "@/lib/getDogsList";
 import { Suspense } from "react";
 
 export default async function Home() {
