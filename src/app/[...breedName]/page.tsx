@@ -1,4 +1,6 @@
+import getDogImg from "@/lib/getDogImg";
 import getDogsList from "@/lib/getDogsList";
+import Image from "next/image";
 
 export const generateStaticParams = async () => {
   const breeds: DogSpec[] = await getDogsList();
@@ -21,6 +23,13 @@ type Props = {
   };
 };
 
-export default function DogImg({ params: { breedName } }: Props) {
-  return <div>{breedName[0]}</div>;
+export default async function DogImg({ params: { breedName } }: Props) {
+  const { message: src }: DogImg = await getDogImg(breedName);
+
+  return (
+    <div>
+      {breedName.join(" ")}
+      <Image src={src} alt={breedName.join(" ")} width={500} height={500} />
+    </div>
+  );
 }

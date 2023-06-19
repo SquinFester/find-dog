@@ -19,13 +19,12 @@ export default async function getDogsList() {
     if (ext.length > 0) {
       ext.forEach((element: string) => {
         const name = `${element} ${key}`;
-        const link = `${key}/${element}`;
         const params = { breed: key, ext: element };
-        dogsList.push({ name, link, params });
+        dogsList.push({ name, params });
       });
     }
 
-    dogsList.push({ name: key, link: key, params: { breed: key } });
+    dogsList.push({ name: key, params: { breed: key } });
   }
 
   return dogsList;

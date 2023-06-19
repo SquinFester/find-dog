@@ -11,7 +11,14 @@ export default async function Home() {
         <Suspense fallback={<p>Loading...</p>}>
           {dogs.map((dog) => (
             <li>
-              <Link href={dog.link} key={Math.random().toFixed(2)}>
+              <Link
+                href={
+                  dog.params.ext
+                    ? `${dog.params.breed}/${dog.params.ext}`
+                    : dog.params.breed
+                }
+                key={Math.random().toFixed(2)}
+              >
                 {dog.name}
               </Link>
             </li>
