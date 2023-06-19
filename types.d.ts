@@ -1,9 +1,6 @@
 type DogSpec = {
-  name: string;
-  params: {
-    breed: string;
-    ext?: string;
-  };
+  breed: string;
+  ext?: string;
 };
 
 type DogImg = {
