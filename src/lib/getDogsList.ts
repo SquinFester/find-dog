@@ -7,11 +7,6 @@ type DogsList = {
   status: string;
 };
 
-type DogSpec = {
-  name: string;
-  link: string;
-};
-
 export default async function getDogsList() {
   const dogs = (await axios<DogsList>("https://dog.ceo/api/breeds/list/all"))
     .data.message;
@@ -25,12 +20,17 @@ export default async function getDogsList() {
       ext.forEach((element: string) => {
         const name = `${element} ${key}`;
         const link = `${key}/${element}`;
-        dogsList.push({ name, link });
+        const params = { breed: key, ext: element };
+        dogsList.push({ name, link, params });
       });
     }
 
-    dogsList.push({ name: key, link: key });
+    dogsList.push({ name: key, link: key, params: { breed: key } });
   }
 
   return dogsList;
 }
+
+// check it: if i make couple getDog but one for link another for params will it fetch more data
+
+// .join this array "/" and return instead of link

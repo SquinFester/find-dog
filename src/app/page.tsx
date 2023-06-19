@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 
 export default async function Home() {
-  const dogs = await getDogsList();
+  const dogs: DogSpec[] = await getDogsList();
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
