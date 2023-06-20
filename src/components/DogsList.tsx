@@ -4,56 +4,65 @@ import getDogsList from "@/lib/getDogsList";
 import ListItem from "./ListItem";
 import { nanoid } from "nanoid";
 import { useState, useEffect } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
+
+const fetchDogs = async (page: number) => {
+  const dogsData: DogSpec[] = await getDogsList();
+  console.log(page);
+  const start = (page - 1) * 5;
+  const end = page * 5;
+
+  const result = dogsData.slice(start, end);
+
+  return result;
+};
 
 const DogsList = () => {
-  const [breeds, setBreeds] = useState<DogSpec[]>([]);
-  const [page, setPage] = useState(1);
-  const itemsPerPage = 5;
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const [DogsList, setDogsList] = useState<DogSpec[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const fetchData = async () => {
-    const data = await getDogsList();
+  const addNewDogs = async () => {
+    setIsLoading(() => true);
+    const newDogs = await fetchDogs(currentPage);
 
-    const start = (page - 1) * itemsPerPage;
-    const end = start + itemsPerPage;
-
-    const newDogs = data.slice(start, end);
-
-    setBreeds((prev) => [...prev, ...newDogs]);
-    setPage((prevPage) => prevPage + 1);
-  };
-
-  const handleScroll = () => {
-    // Check if the user has scrolled to the bottom
-    if (
-      window.innerHeight + document.documentElement.scrollTop ===
-      document.documentElement.offsetHeight
-    ) {
-      // Fetch more data when the bottom of the page is reached
-      fetchData();
-    }
+    setDogsList((prev) => prev.concat(newDogs));
+    setCurrentPage((prev) => prev + 1);
+    setIsLoading(() => false);
   };
 
   useEffect(() => {
-    // Add scroll event listener when the component mounts
-    window.addEventListener("scroll", handleScroll);
-
-    // Clean up the scroll event listener when the component unmounts
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    addNewDogs();
   }, []);
 
   return (
-    <div>
+    <InfiniteScroll
+      dataLength={DogsList.length}
+      next={addNewDogs}
+      hasMore={true}
+      loader={<p>Loading...</p>}
+    >
       <ul className="flex flex-col gap-20">
-        {breeds.map((dog) => (
+        {DogsList.map((dog) => (
           <ListItem dogInfo={dog} key={nanoid()} />
         ))}
       </ul>
-    </div>
+    </InfiniteScroll>
   );
+
+  // return (
+  //   <div>
+  //     <ul className="flex flex-col gap-20">
+  //       {DogsList.map((dog) => (
+  //         <ListItem dogInfo={dog} key={nanoid()} />
+  //       ))}
+  //     </ul>
+  //     {!isLoading ? (
+  //       <button onClick={() => addNewDogs()}>more</button>
+  //     ) : (
+  //       <p>Loading</p>
+  //     )}
+  //   </div>
+  // );
 };
 export default DogsList;

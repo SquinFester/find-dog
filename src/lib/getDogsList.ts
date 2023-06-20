@@ -20,9 +20,9 @@ export default async function getDogsList() {
       ext.forEach((element: string) => {
         dogsList.push({ breed: key, ext: element });
       });
+    } else {
+      dogsList.push({ breed: key });
     }
-
-    dogsList.push({ breed: key });
   }
 
   return dogsList;
