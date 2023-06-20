@@ -33,7 +33,10 @@ export default async function DogImg({ params: { breedName } }: Props) {
     <main className="flex flex-col items-center">
       <Suspense fallback={<p>Loading..</p>}>
         {status === "failed" ? (
-          <p>dog's images are not found</p>
+          <p>
+            dog's images are not found for{" "}
+            <span className="font-medium underline">{name}</span>
+          </p>
         ) : (
           <>
             <Image
