@@ -7,5 +7,10 @@ export default async function getDogImg(breed: string[]) {
         `https://dog.ceo/api/breed/${breed.join("/")}/images/random`
       )
     ).data;
-  } catch (error) {}
+  } catch (error) {
+    return {
+      message: "dog's images are not found",
+      status: "failed",
+    };
+  }
 }

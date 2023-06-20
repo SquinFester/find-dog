@@ -8,26 +8,26 @@ type DogsList = {
 };
 
 export default async function getDogsList() {
-  const dogs = (await axios<DogsList>("https://dog.ceo/api/breeds/list/all"))
-    .data.message;
+  try {
+    const dogs = (await axios<DogsList>("https://dog.ceo/api/breeds/list/all"))
+      .data.message;
 
-  const dogsList: DogSpec[] = [];
+    const dogsList: DogSpec[] = [];
 
-  for (const key in dogs) {
-    const ext = dogs[key];
+    for (const key in dogs) {
+      const ext = dogs[key];
 
-    if (ext.length > 0) {
-      ext.forEach((element: string) => {
-        dogsList.push({ breed: key, ext: element });
-      });
-    } else {
-      dogsList.push({ breed: key });
+      if (ext.length > 0) {
+        ext.forEach((element: string) => {
+          dogsList.push({ breed: key, ext: element });
+        });
+      } else {
+        dogsList.push({ breed: key });
+      }
     }
+
+    return dogsList;
+  } catch (error) {
+    throw new Error("somehing went wrong");
   }
-
-  return dogsList;
 }
-
-// check it: if i make couple getDog but one for link another for params will it fetch more data
-
-// .join this array "/" and return instead of link

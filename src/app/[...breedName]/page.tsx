@@ -25,16 +25,28 @@ type Props = {
 };
 
 export default async function DogImg({ params: { breedName } }: Props) {
-  const { message: src }: DogImg = await getDogImg(breedName);
+  const { message: src, status }: DogImg = await getDogImg(breedName);
 
   const name = breedName.join(" ");
 
   return (
-    <div>
-      {name}
+    <main className="flex flex-col items-center">
       <Suspense fallback={<p>Loading..</p>}>
-        <Image src={src} alt={name} width={300} height={300} loading="lazy" />
+        {status === "failed" ? (
+          <p>dog's images are not found</p>
+        ) : (
+          <>
+            <Image
+              src={src}
+              alt={name}
+              width={300}
+              height={300}
+              loading="lazy"
+            />
+            <h1>{name} 😍</h1>
+          </>
+        )}
       </Suspense>
-    </div>
+    </main>
   );
 }

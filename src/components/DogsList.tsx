@@ -6,6 +6,7 @@ import { nanoid } from "nanoid";
 import { useState, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 
+// dummy fetch limit data or pagination
 const fetchDogs = async (page: number) => {
   const dogsData: DogSpec[] = await getDogsList();
 
@@ -24,13 +25,13 @@ const DogsList = () => {
 
   const addNewDogs = async () => {
     const newDogs = await fetchDogs(currentPage);
+
+    setDogsList((prev) => prev.concat(newDogs));
+    setCurrentPage((prev) => prev + 1);
     if (newDogs.length === 0) {
       setHasMore(() => false);
       return;
     }
-
-    setDogsList((prev) => prev.concat(newDogs));
-    setCurrentPage((prev) => prev + 1);
   };
 
   useEffect(() => {
@@ -39,12 +40,12 @@ const DogsList = () => {
 
   return (
     <InfiniteScroll
-      dataLength={DogsList.length}
+      dataLength={dogsList.length}
       next={addNewDogs}
       hasMore={hasMore}
       loader={<p>Loading...</p>}
     >
-      <ul className="flex flex-col gap-20">
+      <ul className="flex min-h-screen flex-col gap-10">
         {dogsList.map((dog) => (
           <ListItem dogInfo={dog} key={nanoid()} />
         ))}
