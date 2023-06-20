@@ -8,7 +8,7 @@ const ListItem = ({ dogInfo }: { dogInfo: DogSpec }) => {
 
   return (
     <Link
-      href={ext ? `${breed}/${ext}` : breed}
+      href={ext ? `/dog/${breed}/${ext}` : `/dog/${breed}`}
       key={nanoid()}
       className="group grid h-32 place-items-center rounded-xl border-2 border-solid 
       border-primary bg-white text-primary hover:bg-neutral-200 sm:h-36 xl:h-40"
