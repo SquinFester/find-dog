@@ -12,3 +12,7 @@ type DogImg = {
   src: string[];
   name: string;
 };
+
+type DogOption = {
+  name: string;
+};
