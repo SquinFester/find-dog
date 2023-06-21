@@ -46,7 +46,9 @@ export default async function DogImg({ params: { breedName } }: Props) {
               height={300}
               loading="lazy"
             />
-            <h1>{name} 😍</h1>
+            <h1>
+              <span className="italic">{name}</span>&nbsp;😍
+            </h1>
           </>
         )}
       </Suspense>

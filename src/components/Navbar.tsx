@@ -17,7 +17,7 @@ const Navbar = () => {
         </Link>
         <Link
           href="/search"
-          className="rounded-full p-2 transition hover:bg-neutral-500/30 focus:hover:bg-neutral-500/30"
+          className="rounded-full p-2 transition hover:bg-neutral-500/30 focus:bg-neutral-500/30"
         >
           <BsFillSearchHeartFill />
         </Link>

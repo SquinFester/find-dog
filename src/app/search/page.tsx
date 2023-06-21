@@ -2,30 +2,37 @@
 
 import getDogsList from "@/lib/getDogsList";
 import { nanoid } from "nanoid";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import Image from "next/image";
 import getDogImg from "@/lib/getDogImg";
+import { FaAngleDown } from "react-icons/fa";
 
 type DogOption = {
+  name: string;
+};
+
+type PhotoType = {
+  src: string;
   name: string;
 };
 
 export default function Search() {
   const [dogs, setDogs] = useState<DogOption[]>([]);
   const [input, setInput] = useState<string>("");
-  const [src, setSrc] = useState<string>("");
+  const [photo, setPhoto] = useState<PhotoType>({ src: "", name: "" });
   const [error, setError] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>();
+  const [visable, setVisable] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchDogs = async () => {
       const res: DogSpec[] = await getDogsList();
-      const ar: DogOption[] = [];
-      res.map((r) => {
-        const name = r.ext ? `${r.ext} ${r.breed}` : r.breed;
-        ar.push({ name });
+      const dogsForList: DogOption[] = [];
+      res.map((dog) => {
+        const name = dog.ext ? `${dog.ext} ${dog.breed}` : dog.breed;
+        dogsForList.push({ name });
       });
-      setDogs((prev) => prev.concat(ar));
+      setDogs((prev) => prev.concat(dogsForList));
     };
     fetchDogs();
   }, []);
@@ -35,7 +42,8 @@ export default function Search() {
       ? dogs.filter((dog) => dog.name.includes(input))
       : [];
 
-  const fetchImg = async () => {
+  const fetchImg = async (e: FormEvent) => {
+    e.preventDefault();
     setLoading(() => true);
     setError(() => false);
     const conv = input
@@ -46,57 +54,78 @@ export default function Search() {
 
     const getSrc = await getDogImg(conv);
     if (getSrc.status === "success") {
-      setSrc(() => getSrc.message);
-      setLoading(() => false);
+      setPhoto(() => ({ src: getSrc.message, name: input }));
     } else {
-      setSrc(() => "");
+      setPhoto(() => ({ src: "", name: input }));
       setError(() => true);
-      setLoading(() => false);
     }
+    setLoading(() => false);
+    setVisable(() => false);
   };
 
   return (
-    <main className="flex flex-col items-center ">
-      <input
-        className=" w-full rounded-md border-2 border-solid border-primary px-1 py-1 text-black"
-        type="text"
-        value={input}
-        onChange={(e) => setInput(() => e.target.value)}
-      />
-
-      <div className="relative w-full">
-        <ul className="absolute top-0 z-10 block max-h-96 w-full overflow-y-scroll rounded-md bg-neutral-400 px-1">
-          {options.map((dog) => (
-            <li
-              key={nanoid()}
-              onClick={() => setInput(() => dog.name)}
-              className="cursor-pointer"
-            >
-              <button>{dog.name}</button>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <button
-        onClick={() => fetchImg()}
-        className="my-8 w-full rounded-md bg-primary py-2 text-white"
+    <main className=" text-lg">
+      <form
+        className="my-10 flex flex-col items-center justify-center gap-10 md:flex-row"
+        onSubmit={(e) => fetchImg(e)}
       >
-        Search
-      </button>
+        <div className="flex w-full flex-col">
+          <div className="flex w-full items-center justify-between rounded-md border-2 border-solid border-primary p-2 text-black md:flex-row">
+            <input
+              className="w-full outline-none focus:outline-none active:outline-none"
+              type="text"
+              value={input}
+              onChange={(e) => setInput(() => e.target.value)}
+            />
+            <button
+              type="button"
+              className={`text-xl ${
+                visable ? "rotate-180" : "rotate-0 "
+              } rounded-full `}
+              onClick={() => setVisable((prev) => !prev)}
+            >
+              <FaAngleDown />
+            </button>
+          </div>
+          {visable && options.length > 0 && (
+            <div className="relative w-full">
+              <ul className="absolute top-0 z-10 max-h-96 w-full overflow-y-scroll rounded-md bg-neutral-400 px-1">
+                {options.map((dog) => (
+                  <li
+                    key={nanoid()}
+                    onClick={() => setInput(() => dog.name)}
+                    className="cursor-pointer"
+                  >
+                    <button>{dog.name}</button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+
+        <button
+          type="submit"
+          className="w-full rounded-md border-2 border-solid border-primary bg-primary py-2 text-white md:w-1/2"
+        >
+          Search
+        </button>
+      </form>
 
       {loading ? (
         <p>Loading...</p>
       ) : (
-        src.length > 0 && (
-          <div className="flex flex-col items-center">
-            <Image src={src} alt="dog's img" width={500} height={500} />
-            <h1>{input} 😍</h1>
+        photo.src.length > 0 && (
+          <div className="flex flex-col items-center gap-2">
+            <Image src={photo.src} alt="dog's img" width={500} height={500} />
+            <h1>
+              <span className="italic">{photo.name}</span>&nbsp;😍
+            </h1>
           </div>
         )
       )}
 
-      {error && <p>Dog's img not found</p>}
+      {error && <p>{photo.name}'s img not found</p>}
     </main>
   );
 }
