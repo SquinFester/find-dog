@@ -30,7 +30,7 @@ export default async function DogImg({ params: { breedName } }: Props) {
   const name = breedName.join(" ");
 
   return (
-    <main className="flex flex-col items-center">
+    <main className="flex flex-col items-center py-10">
       <Suspense fallback={<p>Loading..</p>}>
         {status === "failed" ? (
           <p>

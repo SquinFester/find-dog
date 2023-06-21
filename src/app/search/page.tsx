@@ -22,8 +22,9 @@ export default function Search() {
   const [photo, setPhoto] = useState<PhotoType>({ src: "", name: "" });
   const [error, setError] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>();
-  const [visable, setVisable] = useState<boolean>(true);
+  const [visable, setVisable] = useState<boolean>(false);
 
+  // fetch list of dogs and set them in dog list
   useEffect(() => {
     const fetchDogs = async () => {
       const res: DogSpec[] = await getDogsList();
@@ -37,21 +38,20 @@ export default function Search() {
     fetchDogs();
   }, []);
 
-  const options =
-    input.trim().length > 0
-      ? dogs.filter((dog) => dog.name.includes(input))
-      : [];
-
+  //fetch image base on user's input
   const fetchImg = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(() => true);
     setError(() => false);
+
+    //convert user's input to another format
     const conv = input
       .toLocaleLowerCase()
       .split(" ")
       .reverse()
       .filter((i) => i !== "");
 
+    //get src and name to display photo
     const getSrc = await getDogImg(conv);
     if (getSrc.status === "success") {
       setPhoto(() => ({ src: getSrc.message, name: input }));
@@ -63,10 +63,15 @@ export default function Search() {
     setVisable(() => false);
   };
 
+  const options =
+    input.trim().length > 0
+      ? dogs.filter((dog) => dog.name.includes(input))
+      : dogs;
+
   return (
     <main className=" text-lg">
       <form
-        className="my-10 flex flex-col items-center justify-center gap-10 md:flex-row"
+        className="flex flex-col items-center justify-center gap-10 py-10 md:flex-row"
         onSubmit={(e) => fetchImg(e)}
       >
         <div className="flex w-full flex-col">
@@ -74,6 +79,7 @@ export default function Search() {
             <input
               className="w-full outline-none focus:outline-none active:outline-none"
               type="text"
+              placeholder="type dog's breed..."
               value={input}
               onChange={(e) => setInput(() => e.target.value)}
             />
@@ -89,14 +95,16 @@ export default function Search() {
           </div>
           {visable && options.length > 0 && (
             <div className="relative w-full">
-              <ul className="absolute top-0 z-10 max-h-96 w-full overflow-y-scroll rounded-md bg-neutral-400 px-1">
+              <ul className="absolute top-0 z-10 flex max-h-96 w-full flex-col gap-1 overflow-y-scroll rounded-md border-2 bg-white px-1">
                 {options.map((dog) => (
                   <li
                     key={nanoid()}
                     onClick={() => setInput(() => dog.name)}
-                    className="cursor-pointer"
+                    className="group cursor-pointer border-b-2 py-2 pl-2 last:border-none hover:bg-neutral-200"
                   >
-                    <button>{dog.name}</button>
+                    <button className="group-hover:font-semibold">
+                      {dog.name}
+                    </button>
                   </li>
                 ))}
               </ul>
@@ -116,8 +124,8 @@ export default function Search() {
         <p>Loading...</p>
       ) : (
         photo.src.length > 0 && (
-          <div className="flex flex-col items-center gap-2">
-            <Image src={photo.src} alt="dog's img" width={500} height={500} />
+          <div className="flex flex-col items-center gap-2 py-10">
+            <Image src={photo.src} alt={photo.name} width={500} height={500} />
             <h1>
               <span className="italic">{photo.name}</span>&nbsp;😍
             </h1>
