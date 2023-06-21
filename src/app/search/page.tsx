@@ -38,8 +38,8 @@ export default function Search() {
     const conv = input
       .toLocaleLowerCase()
       .split(" ")
-      .reverse()
-      .filter((i) => i !== "");
+      .filter((i) => i !== "")
+      .reverse();
 
     setPhoto(() => ({ src: conv, name: input }));
 

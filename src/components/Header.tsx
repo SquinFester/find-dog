@@ -13,7 +13,7 @@ const Header = () => {
             height={64}
           />
         </Link>
-        <h1 className="text-2xl font-bold">FIND DOG'S IMAGE</h1>
+        <h1 className="text-2xl font-bold">FIND DOG&apos;S IMAGE</h1>
       </div>
     </header>
   );
