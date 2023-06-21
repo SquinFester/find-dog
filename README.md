@@ -1,4 +1,4 @@
-here is url to this project https://find-dog-six.vercel.app/
+here is url for this project https://find-dog-six.vercel.app/
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
