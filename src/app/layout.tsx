@@ -1,6 +1,8 @@
 import Header from "@/components/Header";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
+import { Suspense } from "react";
+import Loading from "./loading";
 
 export const metadata = {
   title: "Find Dog App",
@@ -16,7 +18,7 @@ export default async function RootLayout({
     <html lang="en">
       <body className=" bg-white">
         <Header />
-        {children}
+        <Suspense fallback={<Loading />}>{children}</Suspense>
         <Navbar />
       </body>
     </html>

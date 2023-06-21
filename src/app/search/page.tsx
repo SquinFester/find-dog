@@ -3,25 +3,17 @@
 import getDogsList from "@/lib/getDogsList";
 import { nanoid } from "nanoid";
 import { FormEvent, useEffect, useState } from "react";
-import Image from "next/image";
-import getDogImg from "@/lib/getDogImg";
 import { FaAngleDown } from "react-icons/fa";
+import DogImage from "@/components/DogImage";
 
 type DogOption = {
-  name: string;
-};
-
-type PhotoType = {
-  src: string;
   name: string;
 };
 
 export default function Search() {
   const [dogs, setDogs] = useState<DogOption[]>([]);
   const [input, setInput] = useState<string>("");
-  const [photo, setPhoto] = useState<PhotoType>({ src: "", name: "" });
-  const [error, setError] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>();
+  const [photo, setPhoto] = useState<DogImg>({ src: [], name: "" });
   const [visable, setVisable] = useState<boolean>(false);
 
   // fetch list of dogs and set them in dog list
@@ -41,8 +33,6 @@ export default function Search() {
   //fetch image base on user's input
   const fetchImg = async (e: FormEvent) => {
     e.preventDefault();
-    setLoading(() => true);
-    setError(() => false);
 
     //convert user's input to another format
     const conv = input
@@ -51,15 +41,8 @@ export default function Search() {
       .reverse()
       .filter((i) => i !== "");
 
-    //get src and name to display photo
-    const getSrc = await getDogImg(conv);
-    if (getSrc.status === "success") {
-      setPhoto(() => ({ src: getSrc.message, name: input }));
-    } else {
-      setPhoto(() => ({ src: "", name: input }));
-      setError(() => true);
-    }
-    setLoading(() => false);
+    setPhoto(() => ({ src: conv, name: input }));
+
     setVisable(() => false);
   };
 
@@ -81,11 +64,14 @@ export default function Search() {
               type="text"
               placeholder="type dog's breed..."
               value={input}
-              onChange={(e) => setInput(() => e.target.value)}
+              onChange={(e) => {
+                setInput(() => e.target.value);
+                setVisable(() => true);
+              }}
             />
             <button
               type="button"
-              className={`text-xl ${
+              className={`text-xl  text-primary ${
                 visable ? "rotate-180" : "rotate-0 "
               } rounded-full `}
               onClick={() => setVisable((prev) => !prev)}
@@ -114,26 +100,13 @@ export default function Search() {
 
         <button
           type="submit"
-          className="w-full rounded-md border-2 border-solid border-primary bg-primary py-2 text-white md:w-1/2"
+          className="w-full rounded-md border-2 border-solid border-primary bg-primary py-2 text-white transition hover:bg-secondary md:w-1/2"
         >
           Search
         </button>
       </form>
 
-      {loading ? (
-        <p>Loading...</p>
-      ) : (
-        photo.src.length > 0 && (
-          <div className="flex flex-col items-center gap-2 py-10">
-            <Image src={photo.src} alt={photo.name} width={500} height={500} />
-            <h1>
-              <span className="italic">{photo.name}</span>&nbsp;😍
-            </h1>
-          </div>
-        )
-      )}
-
-      {error && <p>{photo.name}'s img not found</p>}
+      {photo.src.length > 0 && <DogImage src={photo.src} name={photo.name} />}
     </main>
   );
 }

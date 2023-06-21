@@ -5,6 +5,7 @@ import ListItem from "./ListItem";
 import { nanoid } from "nanoid";
 import { useState, useEffect } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
+import Loading from "@/app/loading";
 
 // dummy fetch limit data or pagination
 const fetchDogs = async (page: number) => {
@@ -43,7 +44,7 @@ const DogsList = () => {
       dataLength={dogsList.length}
       next={addNewDogs}
       hasMore={hasMore}
-      loader={<p>Loading...</p>}
+      loader={<Loading />}
     >
       <ul className="flex min-h-screen flex-col gap-10">
         {dogsList.map((dog) => (

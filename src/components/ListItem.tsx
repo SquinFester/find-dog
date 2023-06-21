@@ -13,7 +13,7 @@ const ListItem = ({ dogInfo }: { dogInfo: DogSpec }) => {
       className="group grid h-32 place-items-center rounded-xl border-2 border-solid 
       border-primary bg-white text-primary hover:bg-neutral-200 sm:h-36 xl:h-40"
     >
-      <h1 className="text-3xl font-semibold capitalize group-hover:underline">
+      <h1 className="text-center text-3xl font-semibold capitalize group-hover:underline">
         {name}
       </h1>
     </Link>

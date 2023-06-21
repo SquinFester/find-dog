@@ -3,7 +3,12 @@ type DogSpec = {
   ext?: string;
 };
 
-type DogImg = {
+type DogImgPromise = {
   message: string;
   status: string;
+};
+
+type DogImg = {
+  src: string[];
+  name: string;
 };

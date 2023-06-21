@@ -3,7 +3,7 @@ import axios from "axios";
 export default async function getDogImg(breed: string[]) {
   try {
     return (
-      await axios.get<DogImg>(
+      await axios.get<DogImgPromise>(
         `https://dog.ceo/api/breed/${breed.join("/")}/images/random`
       )
     ).data;

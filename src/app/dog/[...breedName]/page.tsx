@@ -1,6 +1,6 @@
-import getDogImg from "@/lib/getDogImg";
+import Loading from "@/app/loading";
+import DogImage from "@/components/DogImage";
 import getDogsList from "@/lib/getDogsList";
-import Image from "next/image";
 import { Suspense } from "react";
 
 export const generateStaticParams = async () => {
@@ -24,33 +24,13 @@ type Props = {
   };
 };
 
-export default async function DogImg({ params: { breedName } }: Props) {
-  const { message: src, status }: DogImg = await getDogImg(breedName);
-
+export default async function DogImgPage({ params: { breedName } }: Props) {
   const name = breedName.join(" ");
 
   return (
-    <main className="flex flex-col items-center py-10">
-      <Suspense fallback={<p>Loading..</p>}>
-        {status === "failed" ? (
-          <p>
-            dog's images are not found for{" "}
-            <span className="font-medium underline">{name}</span>
-          </p>
-        ) : (
-          <>
-            <Image
-              src={src}
-              alt={name}
-              width={300}
-              height={300}
-              loading="lazy"
-            />
-            <h1>
-              <span className="italic">{name}</span>&nbsp;😍
-            </h1>
-          </>
-        )}
+    <main>
+      <Suspense fallback={<Loading />}>
+        <DogImage src={breedName} name={name} />
       </Suspense>
     </main>
   );
