@@ -60,7 +60,10 @@ export default function Search() {
             setVisable(() => true);
           }}
           toogleVisable={() => setVisable((prev) => !prev)}
-          setInputClick={(name: string) => setInput(() => name)}
+          setInputClick={(name: string) => {
+            setInput(() => name);
+            setVisable(() => false);
+          }}
           visable={visable}
           options={options}
         />
