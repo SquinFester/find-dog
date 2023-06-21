@@ -44,7 +44,7 @@ export default function Search() {
   //render options depend on input
   const options =
     input.trim().length > 0
-      ? dogs.filter((dog) => dog.name.includes(input))
+      ? dogs.filter((dog) => dog.name.includes(input.toLowerCase()))
       : dogs;
 
   return (
